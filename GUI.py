@@ -12,10 +12,10 @@ class BoardDisplay(QWidget):
         self.widgetSvg = QSvgWidget(parent=self)
         self.widgetSvg.setGeometry(10, 10, 1080, 1080)
         if (svg == ""):
-            if (boardstate != ""):
-                self.chessboard = chess.Board(boardstate)
-            else:
+            if (boardstate == ""):
                 self.chessboard = chess.Board()
+            else:
+                self.chessboard = chess.Board(boardstate)
             self.chessboardSvg = chess.svg.board(self.chessboard).encode("UTF-8")
         else:
             self.chessboardSvg = svg.encode("UTF-8")
