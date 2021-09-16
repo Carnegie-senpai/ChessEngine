@@ -30,16 +30,16 @@ class MCTree:
             return math.inf
         return self.avg() + self.selectionConstant * sqrt(ln(self.parent.visits)/self.visits)
 
-    def getBestChild(self) -> Union[None, 'MCTree']:
-        """Returns the best child MCTree according to the ucb formula
-
-        If no children, returns None
-        Else returns best available child MCTree
+    def getBestChild(self) -> 'MCTree':
+        """Recursively returns the best child MCTree according to the ucb formula
         """
-        if (len(self.children) == 0):
-            return None
+        # base case which stops recursion
+        if (self.isLeaf()):
+            return self
+
         if (len(self.children) == 1):
-            return self.children[0]
+            return self.children[0].getBestChild()
+
         bestChild = self.children[0]
         bestChildUCB = bestChild.ucb()
         for child in self.children[1:]:
@@ -47,7 +47,7 @@ class MCTree:
             if childUCB > bestChildUCB:
                 bestChild = child
                 bestChildUCB = childUCB
-        return bestChild
+        return bestChild.getBestChild()
 
     def isLeaf(self) -> bool:
         return len(self.children) == 0
@@ -65,5 +65,3 @@ class MCTree:
             parent.totalValue += self.totalValue
             parent.visits += self.visits
             parent = parent.parent
-
-
