@@ -29,7 +29,12 @@ class ChessBoard(QWidget):
         self.widgetSvg.load(self.chessboardSvg)
         self.update()
     
-
+    def update_board(self,board):
+        self.board = board
+        self.chessboardSvg = chess.svg.board(self.board).encode("UTF-8")
+        self.widgetSvg.load(self.chessboardSvg)
+        self.update()
+        
 if __name__ == "__main__":
     app = QApplication([])
     chessBoard = ChessBoard()
