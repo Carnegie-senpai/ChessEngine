@@ -10,6 +10,7 @@ class MCTree:
     def __init__(
         self,
         board: chess.Board = chess.Board(),
+        move: Union[None,chess.Move] = None,
         totalValue: float = 0,
         visits: int = 0,
         parent: Union[None, "MCTree"] = None,
@@ -23,6 +24,7 @@ class MCTree:
         self.children = children
         self.selectionConstant = selectionConstant
         self.board = board
+        self.move = move
 
     def avg(self) -> float:
         return self.totalValue/self.visits
@@ -81,6 +83,7 @@ class MCTree:
         if self.children != []:
             raise Exception("Cannot expand non-leaf node")
 
+        print("Expanding: \n", self.board)
         for move in self.board.generate_legal_moves():
             boardCopy = chess.Board(self.board.fen())
             boardCopy.push_uci(move.uci())
@@ -90,5 +93,23 @@ class MCTree:
                 selectionConstant=self.selectionConstant,
                 children=[],
                 totalValue=0,
-                visits=0
+                visits=0,
+                move=move
             ))
+
+    def maxChild(self):
+        max = self.children[0]
+        for child in self.children:
+            if child.totalValue > max.totalValue:
+                max = child
+        return max
+
+    def __repr__(self, level = 0) -> str:
+        ret =  '\t' * level
+        if self.move:
+            ret += self.move.uci() 
+        ret +="\n"
+        for child in self.children:
+            ret += child.__repr__(level+1)
+        return ret
+
