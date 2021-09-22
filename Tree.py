@@ -9,22 +9,43 @@ import uuid
 class MCTree:
     def __init__(
         self,
-        board: chess.Board = chess.Board(),
+        board: Union[None,chess.Board] = None,
         move: Union[None,chess.Move] = None,
-        totalValue: float = 0,
-        visits: int = 0,
+        totalValue: Union[None,float] = None,
+        visits: Union[None,int] = None,
         parent: Union[None, "MCTree"] = None,
-        children: list['MCTree'] = [],
-        selectionConstant: float = 2
+        children: Union[None,list['MCTree']] = None,
+        selectionConstant: Union[None, float] = None
     ):
         self.id = uuid.uuid4()
-        self.totalValue = totalValue
-        self.visits = visits
-        self.parent = parent
-        self.children = children
-        self.selectionConstant = selectionConstant
-        self.board = board
-        self.move = move
+        if (totalValue == None):
+            self.totalValue = 0
+        else:
+            self.totalValue = totalValue
+        if (visits == None):
+            self.visits = 0
+        else:
+            self.visits = visits
+        if parent == None:
+            self.parent = None
+        else:
+            self.parent = parent
+        if children == None:
+            self.children = []
+        else:
+            self.children = children
+        if selectionConstant == None:
+            self.selectionConstant = 2
+        else:
+            self.selectionConstant = selectionConstant
+        if board == None:
+            self.board = chess.Board()
+        else:
+            self.board = board
+        if move == None:
+            self.move = None
+        else:
+            self.move = move
 
     def avg(self) -> float:
         return self.totalValue/self.visits
@@ -83,7 +104,6 @@ class MCTree:
         if self.children != []:
             raise Exception("Cannot expand non-leaf node")
 
-        print("Expanding: \n", self.board)
         for move in self.board.generate_legal_moves():
             boardCopy = chess.Board(self.board.fen())
             boardCopy.push_uci(move.uci())

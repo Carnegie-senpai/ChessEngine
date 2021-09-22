@@ -36,7 +36,6 @@ def MonteCarloIteration(tree: MCTree, color: chess.Color):
     if result and result.winner == None:
         score = 5
 
-
     # Backpropogation Phase
     toPlay.backPropogate(score)
 
@@ -50,30 +49,24 @@ def MonteCarloSearch(board: chess.Board, limit: int, color: chess.Color = chess.
     itr = 0
     boardCopy = chess.Board(board.fen())
     tree = MCTree(boardCopy)
-    print("Start Tree \n",tree)
     while itr < limit:
         itr += 1
         MonteCarloIteration(tree, color)
-    print("Tree: \n",tree)
     return tree.maxChild().move
 
 
 if __name__ == "__main__":
     board = chess.Board()
     # while not board.is_game_over():
-    try:
-        itr = 0
-        while (not board.is_game_over() and itr < 5):
-            print("Turn: ",board.turn)
-            move = MonteCarloSearch(board, 10, board.turn)
-            if (move != None):
-                if (not board.is_legal(move)):
-                    raise Exception("ILLEGAL MOVE")
-                board.push(move)
-            print(itr)
-            itr+=1
-    except Exception as e:
-        print("Error running game: ", e)
+    itr = 0
+    while (not board.is_game_over() and itr < 5000):
+        move = MonteCarloSearch(board, 10, board.turn)
+        if (move != None):
+            if (not board.is_legal(move)):
+                raise Exception("ILLEGAL MOVE")
+            board.push(move)
+        print(itr)
+        itr += 1
     app = QApplication([])
     cb = ChessBoard.ChessBoard(board.fen())
     cb.show()
